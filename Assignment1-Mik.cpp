@@ -6,7 +6,9 @@ Mik Driver (40244456)
 
 Merge sort reference: https://www.geeksforgeeks.org/merge-sort/
 
-Terminal Input to run: g++ -std=c++11 -pthread Assignment1-Mik.cpp -o Assignment1-Mik ./Assignment1-Mik
+Terminal Inputs to run: 
+Compile: g++ -std=c++11 -pthread Assignment1-Mik.cpp -o Assignment1-Mik 
+Run: ./Assignment1-Mik
 */
 
 
@@ -14,6 +16,8 @@ Terminal Input to run: g++ -std=c++11 -pthread Assignment1-Mik.cpp -o Assignment
 #include <vector>
 #include <thread>
 #include <mutex>
+#include <fstream>
+
 
 using namespace std;
 
@@ -102,7 +106,7 @@ void mergeSort(vector<int>& arr, int left, int right, int threadID) {
 }
 
 // Function to print a vector
-void printVector(vector<int>& arr) {
+void printVector(vector<int>& arr, ostream& out = cout) {
     for (int i = 0; i < arr.size(); i++) cout << arr[i] << " ";
     cout << endl;
 }
@@ -110,10 +114,19 @@ void printVector(vector<int>& arr) {
 
 
 int main() {
-    cout << "Program Started..." << endl; // Add this line
+    cout << "Program Started..." << endl;
 
     vector<int> arr;
-    arr = { 3304, 8221, 26849, 14038, 1509, 6367, 7856, 21362 };
+    ifstream inputFile("input.txt");
+    if (!inputFile) {
+        cerr << "Error: Unable to open input.txt" << endl;
+        return 1;
+    }
+    int num;
+    while (inputFile >> num) {
+        arr.push_back(num);
+    }
+    inputFile.close();
 
     cout << "Given vector is:\n";
     printVector(arr);
@@ -122,6 +135,18 @@ int main() {
     
     cout << "\nSorted vector is:\n";
     printVector(arr);
+    
+    ofstream outputFile("output.txt");
+    if (!outputFile) {
+        cerr << "Error: Unable to open output.txt" << endl;
+        return 1;
+    }
+    
+    outputFile << "Sorted vector:\n";
+    printVector(arr, outputFile);
+    outputFile.flush();
+
+
     return 0;
 
 }
