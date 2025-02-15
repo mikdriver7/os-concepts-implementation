@@ -23,19 +23,20 @@ using namespace std;
 
 // Global Variables
 mutex mtx;
-int threadCounter = 1;
+ofstream outputFile("output.txt");
 
-// Functions
 void logThreadStart(int threadID) {
     lock_guard<mutex> lock(mtx);
-    cout << "Thread " << threadID << " started" << endl;
+    outputFile << "Thread " << threadID << " started" << endl;
+    outputFile.flush();
 }
 
 void logThreadFinish(int threadID, vector<int>& sublist) {
     lock_guard<mutex> lock(mtx);
-    cout << "Thread " << threadID << " finished: ";
-    for (int num : sublist) cout << num << " ";
-    cout << endl;
+    outputFile << "Thread " << threadID << " finished: ";
+    for (int num : sublist) outputFile << num << " ";
+    outputFile << endl;
+    outputFile.flush();
 }
 
 void merge(vector<int>& arr, int left, int mid, int right) {
@@ -80,41 +81,50 @@ void merge(vector<int>& arr, int left, int mid, int right) {
 }
 
 void mergeSort(vector<int>& arr, int left, int right, int threadID) {
-    if (left >= right) { return; }
+    logThreadStart(threadID);
 
-    int mid = left + (right - left) / 2;
-
-   logThreadStart(threadID);
-
-    int leftThreadID = threadID * 10;
-    int rightThreadID = leftThreadID + 1;
-    
-    std::thread leftThread, rightThread;
-    if (threadID < 1000) {
-        leftThread = thread(mergeSort, ref(arr), left, mid, leftThreadID);
-        rightThread = thread(mergeSort, ref(arr), mid + 1, right, rightThreadID);
-        leftThread.join();
-        rightThread.join();
-    } else {
-        mergeSort(arr, left, mid, leftThreadID);
-        mergeSort(arr, mid + 1, right, rightThreadID);
+    // Base case: If the sublist has only one element, log its completion
+    if (left == right) {
+        vector<int> singleElement = {arr[left]};
+        logThreadFinish(threadID, singleElement);
+        return;
     }
 
+    int mid = left + (right - left) / 2;
+    int leftThreadID = threadID * 10;
+    int rightThreadID = threadID * 10 + 1;
+
+    // Create new threads for left and right halves
+    thread leftThread(mergeSort, ref(arr), left, mid, leftThreadID);
+    thread rightThread(mergeSort, ref(arr), mid + 1, right, rightThreadID);
+
+    // Wait for both halves to finish
+    leftThread.join();
+    rightThread.join();
+
+    // Merge the sorted halves
     merge(arr, left, mid, right);
+
+    // Log merged result
     vector<int> sublist(arr.begin() + left, arr.begin() + right + 1);
     logThreadFinish(threadID, sublist);
 }
 
 // Function to print a vector
 void printVector(vector<int>& arr, ostream& out = cout) {
-    for (int i = 0; i < arr.size(); i++) cout << arr[i] << " ";
+    for (int i = 0; i < arr.size(); i++) out << arr[i] << " ";
     cout << endl;
 }
 
 
 
 int main() {
-    cout << "Program Started..." << endl;
+     cout << "Program Started..." << endl;
+
+    if (!outputFile) {
+        cerr << "Error: Unable to open output.txt" << endl;
+        return 1;
+    }
 
     vector<int> arr;
     ifstream inputFile("input.txt");
@@ -122,31 +132,26 @@ int main() {
         cerr << "Error: Unable to open input.txt" << endl;
         return 1;
     }
+   
     int num;
     while (inputFile >> num) {
         arr.push_back(num);
     }
     inputFile.close();
 
-    cout << "Given vector is:\n";
-    printVector(arr);
+    outputFile << "Given vector is:\n";
+    printVector(arr, outputFile);
+    outputFile << "\n\n";
+
     
     mergeSort(arr, 0, arr.size() - 1, 1);
     
-    cout << "\nSorted vector is:\n";
-    printVector(arr);
-    
-    ofstream outputFile("output.txt");
-    if (!outputFile) {
-        cerr << "Error: Unable to open output.txt" << endl;
-        return 1;
-    }
-    
-    outputFile << "Sorted vector:\n";
+    outputFile << "\n\nSorted vector is:\n";
     printVector(arr, outputFile);
-    outputFile.flush();
-
-
+    
+    outputFile.close();
+    cout << "Program Finished..." << endl;
+    
     return 0;
 
 }
