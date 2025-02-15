@@ -25,6 +25,8 @@ using namespace std;
 mutex mtx;
 ofstream outputFile("output.txt");
 
+
+// Functions
 void logThreadStart(int threadID) {
     lock_guard<mutex> lock(mtx);
     outputFile << "Thread " << threadID << " started" << endl;
@@ -83,7 +85,7 @@ void merge(vector<int>& arr, int left, int mid, int right) {
 void mergeSort(vector<int>& arr, int left, int right, int threadID) {
     logThreadStart(threadID);
 
-    // Base case: If the sublist has only one element, log its completion
+    // If the sublist has one element...
     if (left == right) {
         vector<int> singleElement = {arr[left]};
         logThreadFinish(threadID, singleElement);
@@ -94,15 +96,13 @@ void mergeSort(vector<int>& arr, int left, int right, int threadID) {
     int leftThreadID = threadID * 10;
     int rightThreadID = threadID * 10 + 1;
 
-    // Create new threads for left and right halves
+    // New threads for left and right halves
     thread leftThread(mergeSort, ref(arr), left, mid, leftThreadID);
     thread rightThread(mergeSort, ref(arr), mid + 1, right, rightThreadID);
 
-    // Wait for both halves to finish
     leftThread.join();
     rightThread.join();
 
-    // Merge the sorted halves
     merge(arr, left, mid, right);
 
     // Log merged result
