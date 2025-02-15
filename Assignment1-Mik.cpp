@@ -9,14 +9,27 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include <algorithm>
+#include <mutex>
 
 using namespace std;
 
+// Global Variables
+mutex mtx;
+int threadCounter = 1;
 
-// Merges two subarrays of arr[].
-// First subarray is arr[left..mid]
-// Second subarray is arr[mid+1..right]
+// Functions
+void logThreadStart(int threadID) {
+    lock_guard<mutex> lock(mtx);
+    cout << "Thread " << threadID << " started" << endl;
+}
+
+void logThreadFinish(int threadID, vector<int>& sublist) {
+    lock_guard<mutex> lock(mtx);
+    cout << "Thread " << threadID << " finished: ";
+    for (int num : sublist) cout << num << " ";
+    cout << endl;
+}
+
 void merge(vector<int>& arr, int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
@@ -25,18 +38,12 @@ void merge(vector<int>& arr, int left, int mid, int right) {
     vector<int> L(n1), R(n2);
 
     // Copy data to temp vectors L[] and R[]
-    for (int i = 0; i < n1; i++) {
-        L[i] = arr[left + i];
-    }
-    for (int j = 0; j < n2; j++) {
-        R[j] = arr[mid + 1 + j];
-    }
+    for (int i = 0; i < n1; i++) { L[i] = arr[left + i]; }
+    for (int j = 0; j < n2; j++) { R[j] = arr[mid + 1 + j]; }
 
-    int i = 0, j = 0;
-    int k = left;
+    int i = 0, j = 0, k = left;
 
-    // Merge the temp vectors back 
-    // into arr[left..right]
+    // Merge the temp vectors back into arr[left..right]
     while (i < n1 && j < n2) {
         if (L[i] <= R[j]) {
             arr[k] = L[i];
@@ -49,16 +56,14 @@ void merge(vector<int>& arr, int left, int mid, int right) {
         k++;
     }
 
-    // Copy the remaining elements of L[], 
-    // if there are any
+    // Copy the remaining elements of L[], if there are any
     while (i < n1) {
         arr[k] = L[i];
         i++;
         k++;
     }
 
-    // Copy the remaining elements of R[], 
-    // if there are any
+    // Copy the remaining elements of R[], if there are any
     while (j < n2) {
         arr[k] = R[j];
         j++;
@@ -66,46 +71,35 @@ void merge(vector<int>& arr, int left, int mid, int right) {
     }
 }
 
-
-
-// begin is for left index and end is right index
-// of the sub-array of arr to be sorted
-void mergeSort(vector<int>& arr, int left, int right, int depth = 0) {
-    if (left >= right)
-        return;
+void mergeSort(vector<int>& arr, int left, int right, int threadID) {
+    if (left >= right) { return; }
 
     int mid = left + (right - left) / 2;
 
-    // Use threads only if depth is below a certain limit
-    if (depth < 2) {
-        // Use a lambda to pass the function and its arguments
-        std::thread leftThread([&arr, left, mid, depth]() {
-            mergeSort(arr, left, mid, depth + 1);
-        });
+   logThreadStart(threadID);
 
-        std::thread rightThread([&arr, mid, right, depth]() {
-            mergeSort(arr, mid + 1, right, depth + 1);
-        });
-
+    int leftThreadID = threadID * 10;
+    int rightThreadID = leftThreadID + 1;
+    
+    std::thread leftThread, rightThread;
+    if (threadID < 1000) {
+        leftThread = thread(mergeSort, ref(arr), left, mid, leftThreadID);
+        rightThread = thread(mergeSort, ref(arr), mid + 1, right, rightThreadID);
         leftThread.join();
         rightThread.join();
-        
     } else {
-        // Sort sequentially
-        mergeSort(arr, left, mid, depth + 1);
-        mergeSort(arr, mid + 1, right, depth + 1);
+        mergeSort(arr, left, mid, leftThreadID);
+        mergeSort(arr, mid + 1, right, rightThreadID);
     }
 
-    // Merge the two sorted halves
     merge(arr, left, mid, right);
+    vector<int> sublist(arr.begin() + left, arr.begin() + right + 1);
+    logThreadFinish(threadID, sublist);
 }
-
-
 
 // Function to print a vector
 void printVector(vector<int>& arr) {
-    for (int i = 0; i < arr.size(); i++)
-        cout << arr[i] << " ";
+    for (int i = 0; i < arr.size(); i++) cout << arr[i] << " ";
     cout << endl;
 }
 
@@ -113,17 +107,17 @@ void printVector(vector<int>& arr) {
 
 int main() {
     cout << "Program Started..." << endl; // Add this line
- 
-    
-    vector<int> arr = { 12, 11, 13, 5, 6, 7 };
-    int n = arr.size();
 
-    cout << "Given vector is \n";
+    vector<int> arr;
+    arr = { 3304, 8221, 26849, 14038, 1509, 6367, 7856, 21362 };
+
+    cout << "Given vector is:\n";
     printVector(arr);
-
-    mergeSort(arr, 0, n - 1);
-
-    cout << "\nSorted vector is \n";
+    
+    mergeSort(arr, 0, arr.size() - 1, 1);
+    
+    cout << "\nSorted vector is:\n";
     printVector(arr);
     return 0;
+
 }
