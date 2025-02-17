@@ -3,12 +3,13 @@ COEN 346
 Lab Assignment #1
 Merge-Sort using multithreading
 Mik Driver (40244456)
+Victor Depaz (40242703)
 
 Merge sort reference: https://www.geeksforgeeks.org/merge-sort/
 
 Terminal Inputs to run: 
-Compile: g++ -std=c++11 -pthread Assignment1-Mik.cpp -o Assignment1-Mik 
-Run: ./Assignment1-Mik
+Compile: g++ -std=c++11 -pthread Assignment1.cpp -o Assignment1 
+Run: ./Assignment1
 */
 
 
