@@ -1,0 +1,93 @@
+Given vector is:
+1 2 3 4 5 6 7 8 9 10 0 0 10 9 8 7 6 5 4 3 2 1 
+
+Thread 1 started
+Thread 10 started
+Thread 11 started
+Thread 100 started
+Thread 101 started
+Thread 111 started
+Thread 110 started
+Thread 1001 started
+Thread 1000 started
+Thread 1100 started
+Thread 1110 started
+Thread 1101 started
+Thread 1011 started
+Thread 11000 started
+Thread 11100 started
+Thread 11010 started
+Thread 10011 started
+Thread 110000 started
+Thread 110000 finished: 0 
+Thread 11001 started
+Thread 11011 started
+Thread 10110 started
+Thread 111000 started
+Thread 111000 finished: 5 
+Thread 10010 started
+Thread 11101 started
+Thread 11101 finished: 3 
+Thread 11001 finished: 9 
+Thread 10111 started
+Thread 10111 finished: 0 
+Thread 110001 started
+Thread 110001 finished: 10 
+Thread 110101 started
+Thread 110101 finished: 7 
+Thread 1111 started
+Thread 10001 started
+Thread 10001 finished: 3 
+Thread 110100 started
+Thread 110100 finished: 8 
+Thread 10000 started
+Thread 100100 started
+Thread 100100 finished: 4 
+Thread 111001 started
+Thread 111001 finished: 4 
+Thread 11000 finished: 0 10 
+Thread 11011 finished: 6 
+Thread 10110 finished: 10 
+Thread 11110 started
+Thread 11110 finished: 2 
+Thread 1010 started
+Thread 11010 finished: 7 8 
+Thread 100101 started
+Thread 100101 finished: 5 
+Thread 1101 finished: 6 7 8 
+Thread 10010 finished: 4 5 
+Thread 11100 finished: 4 5 
+Thread 1100 finished: 0 9 10 
+Thread 11111 started
+Thread 11111 finished: 1 
+Thread 10100 started
+Thread 100000 started
+Thread 100000 finished: 1 
+Thread 100001 started
+Thread 100001 finished: 2 
+Thread 1110 finished: 3 4 5 
+Thread 110 finished: 0 6 7 8 9 10 
+Thread 1011 finished: 0 10 
+Thread 1111 finished: 1 2 
+Thread 101000 started
+Thread 101000 finished: 7 
+Thread 101001 started
+Thread 101001 finished: 8 
+Thread 10000 finished: 1 2 
+Thread 10100 finished: 7 8 
+Thread 10101 started
+Thread 10101 finished: 9 
+Thread 111 finished: 1 2 3 4 5 
+Thread 1000 finished: 1 2 3 
+Thread 11 finished: 0 1 2 3 4 5 6 7 8 9 10 
+Thread 1010 finished: 7 8 9 
+Thread 10011 finished: 6 
+Thread 101 finished: 0 7 8 9 10 
+Thread 1001 finished: 4 5 6 
+Thread 100 finished: 1 2 3 4 5 6 
+Thread 10 finished: 0 1 2 3 4 5 6 7 8 9 10 
+Thread 1 finished: 0 0 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 10 10 
+
+
+Sorted vector is:
+0 0 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 10 10 

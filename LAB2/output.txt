@@ -1,0 +1,14 @@
+Time 1, User User1, Process 0: Started
+Time 1, User User1, Process 0: Resumed
+Time 1, User User1, Process 0: Paused
+Time 2, User User1, Process 0: Paused
+Time 2, User User1, Process 0: Finished
+Time 4, User User1, Process 1: Started
+Time 4, User User1, Process 1: Resumed
+Time 4, User User1, Process 1: Paused
+Time 4, User User1, Process 1: Finished
+Time 5, User User2, Process 0: Started
+Time 5, User User2, Process 0: Resumed
+Time 5, User User2, Process 0: Paused
+Time 6, User User2, Process 0: Paused
+Time 6, User User2, Process 0: Finished

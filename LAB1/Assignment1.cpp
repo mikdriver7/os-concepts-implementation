@@ -120,14 +120,14 @@ void printVector(vector<int>& arr, ostream& out = cout) {
 
 
 int main() {
-     cout << "Program Started..." << endl;
+    cout << "Program Started..." << endl;
+    vector<int> arr;
 
     if (!outputFile) {
         cerr << "Error: Unable to open output.txt" << endl;
         return 1;
     }
 
-    vector<int> arr;
     ifstream inputFile("input.txt");
     if (!inputFile) {
         cerr << "Error: Unable to open input.txt" << endl;
