@@ -1,116 +1,124 @@
 #include "Scheduler.h"
-#include "Process.h"
 #include <iostream>
-using namespace std;
 #include <chrono>
 #include <algorithm>
 
-Scheduler::Scheduler(int quantum, const std::string& log_filename)
-    : time_quantum(quantum), current_time(0), logger(log_filename), running(false) {}
+using namespace std;
 
-void Scheduler::add_user(const User& user) {
-    users.push_back(user);
+// Initializes the scheduler with a given time quantum and a logger for events.
+Scheduler::Scheduler(int quantum, const std::string& log_filename)
+    : time_quantum(quantum), current_time(1), logger(log_filename), running(false) {}
+
+// Adds a user to the scheduler.
+void Scheduler::add_user(std::unique_ptr<User> user) {
+    users.push_back(std::move(user));
 }
 
+// Runs the scheduler.
 void Scheduler::run_scheduler() {
-    current_time = 1;  // Start at time 0
+    current_time = 1;
 
+    // Start all process threads for each user.
+    for (auto& user : users) {
+        user->start_processes();
+    }
+
+    // Main scheduling loop: runs until all processes are finished.
     while (true) {
-        // Check if all processes are finished
-        bool all_finished = true;
-        for (auto& user : users) {
-            for (auto& process : user.processes) {
-                if (!process.is_finished()) {
-                    all_finished = false;
-                    break;
-                }
-            }
-            if (!all_finished) break;
+        if (all_processes_finished()) {
+            std::cout << "All processes finished at time: " << current_time << std::endl;
+            break;
         }
-        if (all_finished) break;
 
-        // Increment time and check at each step
-        std::this_thread::sleep_for(std::chrono::seconds(1)); // Sleep for 1 second
-       
-
-        // Distribute time quantum among users and processes
         distribute_quantum();
     }
-}
 
-// checkpoint
-
-// checkpoint
-
-void Scheduler::distribute_quantum() {
-    std::vector<User*> active_users;
-    std::vector<User*> all_users;
+    // After scheduling is complete, stop all processes.
     for (auto& user : users) {
-        all_users.push_back(&user);
-        auto ready_processess = user.get_ready_processes(current_time);
-        if (!ready_processess.empty()) {
-            active_users.push_back(&user);
-        }
-        
+        user->stop_processes();
     }
 
-    if (active_users.empty()) return;
+    std::cout << "Scheduling complete at time: " << current_time << std::endl;
+}
 
-    for (auto user : active_users) {
+// Checks if all processes for all users are finished.
+bool Scheduler::all_processes_finished() {
+    for (auto& user : users) {
+        if (!user->is_all_processes_finished()) {
+            return false;
+        }
+    }
+    return true;
+}
 
-        
-        
+// Distributes the time quantum to users and their processes.
+void Scheduler::distribute_quantum() {
+    vector<User*> active_users;
 
-        // Divide the time quantum equally between active users
-        int user_quantum = time_quantum / active_users.size();
-
+    // Step 1: Collect users with ready processes
+    for (auto& user : users) {
         auto ready_processes = user->get_ready_processes(current_time);
-        int proc = 0;
-        for (auto process : ready_processes) {
-            proc++;
-
+        if (!ready_processes.empty()) {
+            active_users.push_back(user.get());
         }
-        int process_quantum = user_quantum;
-        if (proc != 0) {
-            
-            process_quantum = user_quantum / proc;
-        }
+    }
 
-        
-            
-        for (auto process : ready_processes) {
-            std::unique_lock<std::mutex> lock(mtx);
-            running = true;
-            cv.notify_all();
+    // If no users are ready, advance time and return
+    if (active_users.empty()) {
+        current_time += 1;
+        return;
+    }
 
-            // Log the "Started" event when process starts
+    // Make sure index is in bounds
+    if (current_user_index >= active_users.size()) {
+        current_user_index = 0;
+    }
+
+    // Get the current user in round-robin fashion
+    User* user = active_users[current_user_index];
+
+    auto ready_processes = user->get_ready_processes(current_time);
+
+    if (!ready_processes.empty()) {
+        int process_quantum = time_quantum / active_users.size();
+        if (process_quantum == 0) process_quantum = 1;
+
+        auto process = ready_processes.front();
+
+        if (!process->is_finished()) {
+            int start_time = current_time;
+
+            // First time ever? Log Started
             if (process->get_state() == State::READY) {
-                logger.log_event(current_time, "User" + std::to_string(user->user_id), process->process_id, "Started");
-                process->set_state(State::RUNNING);
+                logger.log_event(start_time, "User " + user->user_id, process->process_id, "Started");
             }
 
-            // Log "Resumed" if the process is already running
-            if (process->get_state() == State::RUNNING) {
-                logger.log_event(current_time, "User" + std::to_string(user->user_id), process->process_id, "Resumed");
-            }
+            logger.log_event(start_time, "User " + user->user_id, process->process_id, "Resumed");
 
-            // Run the process for the allocated quantum or until it finishes
-            int run_time = std::min(process_quantum, process->remaining_time);
-            process->run(run_time, current_time);
-            current_time=current_time+run_time;
+            int actual_run_time = process->run(process_quantum);
 
-            // Pause the process after running for the quantum or if it's finished
-            logger.log_event(current_time, "User" + std::to_string(user->user_id), process->process_id, "Paused");
-            process->set_state(State::RUNNING);
+            int end_time = current_time + actual_run_time;
 
-            running = false;
-            cv.notify_all();
-
-            // Finish the process if it's done running
             if (process->is_finished()) {
-                logger.log_event(current_time, "User" + std::to_string(user->user_id), process->process_id, "Finished");
-                process->set_state(State::FINISHED);
+                logger.log_event(end_time, "User " + user->user_id, process->process_id, "Finished");
+            } else {
+                logger.log_event(end_time, "User " + user->user_id, process->process_id, "Paused");
             }
+
+            // Advance time
+            current_time = end_time;
         }
+    }
+
+    // Move to the next user index for round-robin fairness
+    current_user_index++;
+
+    // Wrap-around if we reach the end
+    if (current_user_index >= active_users.size()) {
+        current_user_index = 0;
     }
 }
+
+
+
+
