@@ -7,7 +7,7 @@ using namespace std;
 
 // Initializes the scheduler with a given time quantum and a logger for events.
 Scheduler::Scheduler(int quantum, const std::string& log_filename)
-    : time_quantum(quantum), current_time(1), logger(log_filename), running(false) {}
+    : time_quantum(quantum), current_time(1), logger(log_filename), running(false), current_user_index(0) {}
 
 // Adds a user to the scheduler.
 void Scheduler::add_user(std::unique_ptr<User> user) {
@@ -55,7 +55,6 @@ bool Scheduler::all_processes_finished() {
 void Scheduler::distribute_quantum() {
     vector<User*> active_users;
 
-    // Step 1: Collect users with ready processes
     for (auto& user : users) {
         auto ready_processes = user->get_ready_processes(current_time);
         if (!ready_processes.empty()) {
@@ -63,62 +62,42 @@ void Scheduler::distribute_quantum() {
         }
     }
 
-    // If no users are ready, advance time and return
     if (active_users.empty()) {
         current_time += 1;
         return;
     }
 
-    // Make sure index is in bounds
+    // Pick ONE user each time (round-robin)
     if (current_user_index >= active_users.size()) {
         current_user_index = 0;
     }
 
-    // Get the current user in round-robin fashion
-    User* user = active_users[current_user_index];
+    auto user = active_users[current_user_index];
+    current_user_index++; // Advance for next cycle!
 
     auto ready_processes = user->get_ready_processes(current_time);
-
-    if (!ready_processes.empty()) {
-        int process_quantum = time_quantum / active_users.size();
-        if (process_quantum == 0) process_quantum = 1;
-
-        auto process = ready_processes.front();
-
-        if (!process->is_finished()) {
-            int start_time = current_time;
-
-            // First time ever? Log Started
-            if (process->get_state() == State::READY) {
-                logger.log_event(start_time, "User " + user->user_id, process->process_id, "Started");
-            }
-
-            logger.log_event(start_time, "User " + user->user_id, process->process_id, "Resumed");
-
-            int actual_run_time = process->run(process_quantum);
-
-            int end_time = current_time + actual_run_time;
-
-            if (process->is_finished()) {
-                logger.log_event(end_time, "User " + user->user_id, process->process_id, "Finished");
-            } else {
-                logger.log_event(end_time, "User " + user->user_id, process->process_id, "Paused");
-            }
-
-            // Advance time
-            current_time = end_time;
-        }
+    if (ready_processes.empty()) {
+        return; // No ready process? Move on next time.
     }
 
-    // Move to the next user index for round-robin fairness
-    current_user_index++;
+    auto process = ready_processes.front();
 
-    // Wrap-around if we reach the end
-    if (current_user_index >= active_users.size()) {
-        current_user_index = 0;
+    // Run the process...
+    if (process->get_state() == State::READY) {
+        logger.log_event(current_time, "User " + user->user_id, process->process_id, "Started");
+    }
+
+    logger.log_event(current_time, "User " + user->user_id, process->process_id, "Resumed");
+
+    int actual_run_time = process->run(time_quantum); // Full quantum or per process quantum?
+    
+    current_time += actual_run_time;
+
+    if (process->is_finished()) {
+        logger.log_event(current_time, "User " + user->user_id, process->process_id, "Finished");
+    } else {
+        logger.log_event(current_time, "User " + user->user_id, process->process_id, "Paused");
     }
 }
-
-
 
 

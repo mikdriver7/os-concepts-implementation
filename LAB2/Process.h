@@ -49,7 +49,7 @@ private:
     // State and runtime tracking
     int allocated_time_slice;
     int last_run_time;  //  Added to track how much time the process ran in its last slice
-    bool finished;      // 🔥 True when the process finishes all work
+    bool finished;      // True when the process finishes all work
     State state;
 };
 
