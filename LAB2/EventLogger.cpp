@@ -9,7 +9,8 @@ EventLogger::EventLogger(const std::string& filename) {
     log_file.open(filename);
     if (!log_file.is_open()) {
         std::cerr << "Error: Could not open log file " << filename << std::endl;
-    } else {
+    }
+    else {
         log_file.setf(std::ios::unitbuf);  // Disable buffering
     }
 }
@@ -25,8 +26,8 @@ void EventLogger::log_event(int time, const std::string& user, int process_id, c
     if (log_file.is_open()) {
         log_file << "Time " << time << ", User " << user << ", Process " << process_id << ": " << event << std::endl;
         log_file.flush();  // Ensure the event is immediately written to the log file
-    } else {
+    }
+    else {
         std::cerr << "Error: Log file is not open." << std::endl;
     }
 }
-
