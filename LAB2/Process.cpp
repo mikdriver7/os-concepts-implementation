@@ -1,5 +1,6 @@
 #include "Process.h"
-
+#include <iostream>
+using namespace std;
 // Constructor to initialize a process
 Process::Process(int id, int uid, int ready, int service)
     : process_id(id), user_id(uid), ready_time(ready), service_time(service), remaining_time(service), finished(false), state(State::READY) {}
@@ -8,9 +9,12 @@ Process::Process(int id, int uid, int ready, int service)
 void Process::run(int time_slice, int& current_time) {
     remaining_time -= time_slice;  // Subtract time slice from remaining time
 
+    
+
     if (remaining_time > 0) {
         state = State::RUNNING;  // The process is still running
-    } else {
+    }
+    else {
         state = State::FINISHED;  // Process is finished
     }
 }
