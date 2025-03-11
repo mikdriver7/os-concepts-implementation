@@ -77,20 +77,19 @@ void Scheduler::distribute_quantum() {
         per_user_quantum = 1; // At least 1 unit of time
     }
 
-    // Pick ONE user each time (round-robin)
+    // Round-Robin between users
     if (current_user_index >= active_users.size()) {
         current_user_index = 0;
     }
 
     auto user = active_users[current_user_index];
-    current_user_index++; // Advance for next cycle!
+    current_user_index++; // Move to next user
 
-    auto ready_processes = user->get_ready_processes(current_time);
-    if (ready_processes.empty()) {
+    // Get the next process for this user (Round-Robin for processes)
+    auto process = user->get_next_ready_process(current_time);
+    if (!process) {
         return; // No ready process? Move on next time.
     }
-
-    auto process = ready_processes.front();
 
     // Run the process...
     if (process->get_state() == State::READY) {

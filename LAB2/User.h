@@ -21,10 +21,13 @@ public:
     std::string user_id;
 
     bool is_all_processes_finished() const;
+    Process* get_next_ready_process(int current_time);
+
 
 
 private:
     std::vector<std::unique_ptr<Process>> processes;
+      size_t current_process_index = 0;
 };
 
 #endif // USER_H

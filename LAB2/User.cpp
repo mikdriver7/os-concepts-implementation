@@ -46,3 +46,23 @@ bool User::is_all_processes_finished() const {
     }
     return true;
 }
+
+Process* User::get_next_ready_process(int current_time) {
+    auto ready_processes = get_ready_processes(current_time);
+
+    if (ready_processes.empty()) {
+        return nullptr; // No process ready to run
+    }
+
+    if (current_process_index >= ready_processes.size()) {
+        current_process_index = 0; // Wrap around if index too big
+    }
+
+    // Pick the next process in RR order
+    Process* next_process = ready_processes[current_process_index];
+
+    // Move index forward for next round
+    current_process_index++;
+
+    return next_process;
+}
