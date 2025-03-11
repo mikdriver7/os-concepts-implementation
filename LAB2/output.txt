@@ -8,10 +8,13 @@ Time 7, User A, Process 0, Started
 Time 7, User A, Process 0, Resumed
 Time 8, User A, Process 0, Paused
 Time 8, User A, Process 1, Resumed
+Time 9, User A, Process 1, Paused
 Time 9, User A, Process 1, Finished
 Time 9, User B, Process 0, Resumed
 Time 11, User B, Process 0, Paused
 Time 11, User A, Process 0, Resumed
+Time 13, User A, Process 0, Paused
 Time 13, User A, Process 0, Finished
 Time 13, User B, Process 0, Resumed
+Time 15, User B, Process 0, Paused
 Time 15, User B, Process 0, Finished

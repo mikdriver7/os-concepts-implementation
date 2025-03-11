@@ -119,6 +119,8 @@ void Scheduler::distribute_quantum() {
         current_time += actual_run_time;
 
         if (process->is_finished()) {
+            logger.log_event(current_time, "User " + user->user_id, process->process_id, "Paused");
+
             logger.log_event(current_time, "User " + user->user_id, process->process_id, "Finished");
         } else {
             logger.log_event(current_time, "User " + user->user_id, process->process_id, "Paused");
