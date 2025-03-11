@@ -13,16 +13,6 @@ void User::add_process(int process_id, int ready_time, int service_time) {
     processes.emplace_back(std::make_unique<Process>(process_id, user_id, ready_time, service_time));
 }
 
-// Get processes ready at the current time
-std::vector<Process*> User::get_ready_processes(int current_time) {
-    std::vector<Process*> ready_processes;
-    for (auto& process : processes) {
-        if (!process->is_finished() && process->ready_time <= current_time) {
-            ready_processes.push_back(process.get());
-        }
-    }
-    return ready_processes;
-}
 
 // Start all process threads
 void User::start_processes() {
@@ -45,6 +35,17 @@ bool User::is_all_processes_finished() const {
         }
     }
     return true;
+}
+
+// Get processes ready at the current time
+std::vector<Process*> User::get_ready_processes(int current_time) {
+    std::vector<Process*> ready_processes;
+    for (auto& process : processes) {
+        if (!process->is_finished() && process->ready_time <= current_time) {
+            ready_processes.push_back(process.get());
+        }
+    }
+    return ready_processes;
 }
 
 Process* User::get_next_ready_process(int current_time) {

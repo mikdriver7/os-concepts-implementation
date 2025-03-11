@@ -27,7 +27,7 @@ public:
 
 private:
     std::vector<std::unique_ptr<Process>> processes;
-      size_t current_process_index = 0;
+    size_t current_process_index = 0;
 };
 
 #endif // USER_H

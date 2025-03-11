@@ -6,8 +6,9 @@
 using namespace std;
 
 // Initializes the scheduler with a given time quantum and a logger for events.
-Scheduler::Scheduler(int quantum, const std::string& log_filename)
-    : time_quantum(quantum), current_time(1), logger(log_filename), running(false), current_user_index(0) {}
+Scheduler::Scheduler(int quantum, const std::string& log_filename) : time_quantum(quantum), current_time(1), logger(log_filename), running(false), current_user_index(0) {
+
+}
 
 // Adds a user to the scheduler.
 void Scheduler::add_user(std::unique_ptr<User> user) {
@@ -86,26 +87,42 @@ void Scheduler::distribute_quantum() {
     current_user_index++; // Move to next user
 
     // Get the next process for this user (Round-Robin for processes)
-    auto process = user->get_next_ready_process(current_time);
-    if (!process) {
-        return; // No ready process? Move on next time.
+    auto ready_processes = user->get_ready_processes(current_time);
+
+    if (ready_processes.empty()) {
+        // This user has no ready processes (could be a race condition if state changed), skip
+        return;
     }
 
-    // Run the process...
-    if (process->get_state() == State::READY) {
-        logger.log_event(current_time, "User " + user->user_id, process->process_id, "Started");
+    int num_ready_processes = ready_processes.size();
+
+    // Divide the user's quantum equally among processes
+    int per_process_quantum = per_user_quantum / num_ready_processes;
+
+    if (per_process_quantum == 0) {
+        per_process_quantum = 1; // At least 1 unit of time
     }
 
-    logger.log_event(current_time, "User " + user->user_id, process->process_id, "Resumed");
 
-    int actual_run_time = process->run(per_user_quantum);
+    // Iterate over each ready process and run it for its slice
+    for (auto process : ready_processes) {
+        if (!process) continue;
 
-    current_time += actual_run_time;
+        if (process->get_state() == State::READY) {
+            logger.log_event(current_time, "User " + user->user_id, process->process_id, "Started");
+        }
 
-    if (process->is_finished()) {
-        logger.log_event(current_time, "User " + user->user_id, process->process_id, "Finished");
-    } else {
-        logger.log_event(current_time, "User " + user->user_id, process->process_id, "Paused");
+        logger.log_event(current_time, "User " + user->user_id, process->process_id, "Resumed");
+
+        int actual_run_time = process->run(per_process_quantum);
+
+        current_time += actual_run_time;
+
+        if (process->is_finished()) {
+            logger.log_event(current_time, "User " + user->user_id, process->process_id, "Finished");
+        } else {
+            logger.log_event(current_time, "User " + user->user_id, process->process_id, "Paused");
+        }
     }
 }
 
