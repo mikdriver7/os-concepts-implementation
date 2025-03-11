@@ -52,9 +52,11 @@ bool Scheduler::all_processes_finished() {
 }
 
 // Distributes the time quantum to users and their processes.
+
 void Scheduler::distribute_quantum() {
     vector<User*> active_users;
 
+    // Gather active users who have ready processes
     for (auto& user : users) {
         auto ready_processes = user->get_ready_processes(current_time);
         if (!ready_processes.empty()) {
@@ -63,8 +65,16 @@ void Scheduler::distribute_quantum() {
     }
 
     if (active_users.empty()) {
+        // No active users, advance time
         current_time += 1;
         return;
+    }
+
+    // Fair share quantum for each active user
+    int per_user_quantum = time_quantum / active_users.size();
+
+    if (per_user_quantum == 0) {
+        per_user_quantum = 1; // At least 1 unit of time
     }
 
     // Pick ONE user each time (round-robin)
@@ -89,8 +99,8 @@ void Scheduler::distribute_quantum() {
 
     logger.log_event(current_time, "User " + user->user_id, process->process_id, "Resumed");
 
-    int actual_run_time = process->run(time_quantum); // Full quantum or per process quantum?
-    
+    int actual_run_time = process->run(per_user_quantum);
+
     current_time += actual_run_time;
 
     if (process->is_finished()) {
@@ -99,5 +109,6 @@ void Scheduler::distribute_quantum() {
         logger.log_event(current_time, "User " + user->user_id, process->process_id, "Paused");
     }
 }
+
 
 
