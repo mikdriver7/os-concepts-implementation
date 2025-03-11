@@ -2,6 +2,7 @@
 fair-share process scheduler
 LAB ASSIGNMENT 2
 Mik Driver (40244456)
+Victor Depaz (40242703)
 
 g++ -std=c++14 main.cpp EventLogger.cpp Process.cpp User.cpp Scheduler.cpp -o scheduler -pthread
 ./scheduler
