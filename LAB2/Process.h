@@ -25,7 +25,7 @@ public:
     State get_state() const;
     void set_state(State new_state);
 
-    // Public read-only data (OK if you prefer to keep these public)
+    // Public read-only data 
     int process_id;
     std::string user_id;
     int ready_time;

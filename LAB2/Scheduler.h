@@ -36,7 +36,7 @@ private:
 
     EventLogger logger;  // Logger for events
 
-    // Not used in current logic (remove if unnecessary)
+    // Not used in current logic!!!!
     std::mutex mtx;
     std::condition_variable cv;
     bool running;
