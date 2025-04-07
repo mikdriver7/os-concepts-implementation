@@ -1,0 +1,16 @@
+Clock: 7, Process 2: Started.
+Clock: 7, Process 2, Store: Variable 1, Value: 5
+Clock: 13, Process 1: Started.
+Clock: 13, Process 1, Store: Variable 1, Value: 5
+Clock: 36, Process 1, Store: Variable 2, Value: 3
+Clock: 52, Process 2, Store: Variable 2, Value: 3
+Clock: 66, Process 2, Store: Variable 3, Value: 7
+Clock: 72, Memory Manager, SWAP: Variable 3 with Variable 1
+Clock: 72, Process 2, Lookup: Variable 3, Value: 7
+Clock: 89, Process 1, Store: Variable 3, Value: 7
+Clock: 121, Memory Manager, SWAP: Variable 2 with Variable 1
+Clock: 121, Process 2, Lookup: Variable 2, Value: 3
+Clock: 145, Process 1, Lookup: Variable 3, Value: 7
+Clock: 174, Process 1, Lookup: Variable 2, Value: 3
+Clock: 184, Process 2: Finished.
+Clock: 219, Process 1: Finished.
