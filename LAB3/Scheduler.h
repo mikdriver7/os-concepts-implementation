@@ -4,6 +4,7 @@
 #include "Process.h"
 #include "Logger.h"
 #include "Clock.h"
+#include "VirtualMemoryManager.h"
 
 #include <vector>
 #include <queue>
@@ -30,11 +31,13 @@ private:
 
     Logger& logger;  // Reference to the logger
     Clock& clock;    // Reference to the clock
+    VirtualMemoryManager& vmm;
 
     
 
 public:
-    Scheduler(int cores, Logger& logger, Clock& clock);  // Pass logger and clock
+    Scheduler(int cores, Logger& logger, Clock& clock, VirtualMemoryManager& vmm);
+
     void addProcess(Process* process);
     void run();
     void stop();

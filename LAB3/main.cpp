@@ -8,7 +8,6 @@ g++ -std=c++14 main.cpp Clock.cpp Logger.cpp VirtualMemoryManager.cpp Process.cp
 ./scheduler
 */
 
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -47,7 +46,6 @@ int main() {
     DiskManager disk("vm.txt");
     VirtualMemoryManager vmm(mainmem, disk, clock, logger);
 
-
     // Load command list
     std::ifstream commandFile("commands.txt");
     if (!commandFile) {
@@ -59,7 +57,7 @@ int main() {
     std::string line;
     while (std::getline(commandFile, line)) {
         if (!line.empty())
-            commands.emplace_back(line); // Add each command from the file
+            commands.emplace_back(line, commands.size() + 1); // Add each command from the file with a unique ID
     }
     commandFile.close();
 
@@ -75,10 +73,9 @@ int main() {
 
     cout << cores << " Cores\n\n";
     
-    Scheduler scheduler(cores, logger, clock);  // Pass the logger and clock to the Scheduler
+    Scheduler scheduler(cores, logger, clock, vmm);  // Pass vmm to the constructor
     std::vector<std::unique_ptr<Process> > processes; 
 
-  
     for (int i = 0; i < numProcesses; ++i) {
         int startTime, duration;
         procFile >> startTime >> duration;

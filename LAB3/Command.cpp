@@ -3,7 +3,9 @@
 
 Command::Command() : type(UNKNOWN), variableId(""), value(0) {}
 
-Command::Command(const std::string& rawLine) {
+Command::Command(const std::string& rawLine, int commandId)
+    : executed(false), id(commandId) {
+
     std::istringstream iss(rawLine);
     std::string cmd;
     iss >> cmd;
@@ -23,4 +25,5 @@ Command::Command(const std::string& rawLine) {
     else {
         type = UNKNOWN;
     }
+
 }

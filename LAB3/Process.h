@@ -44,6 +44,8 @@ public:
         return running.load();
     }
     
+    std::vector<Command>& getCommands() { return commands; }
+    
 };
 
 #endif

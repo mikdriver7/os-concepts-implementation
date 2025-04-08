@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-Clock::Clock() : currentTime(1000), running(false) {}
+Clock::Clock() : currentTime(0), running(false) {}
 
 void Clock::start() {
     running = true;

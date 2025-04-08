@@ -1,27 +1,21 @@
 
 Clock: 1000, Scheduler: Launching Process 2 (Start time: 1)
-Clock: 1000, Process 2: Started.
-Clock: 1000, Process 2, Store: Variable 1, Value: 5
-Clock: 1410, Process 2, Store: Variable 2, Value: 3
+Clock: 1350, Process 2, Store: Variable 1, Value: 5
+Clock: 1790, Process 2, Store: Variable 2, Value: 3
 
 Clock: 2000, Scheduler: Launching Process 1 (Start time: 2)
-Clock: 2000, Process 1: Started.
-Clock: 2040, Process 2, Store: Variable 3, Value: 7
-Clock: 2430, Process 2, Lookup: Variable 3, Value: 7
-Clock: 2450, Process 2, Lookup: Variable 2, Value: 3
-Clock: 2740, Process 1, Lookup: Variable 3, Value: 7
-Clock: 2810, Process 2: Finished.
-Clock: 3090, Process 1, Lookup: Variable 2, Value: 3
-Clock: 3860, Process 1, Release: Variable 1
+Clock: 2240, Process 2, Store: Variable 3, Value: 7
+Clock: 2670, Process 2, Lookup: Variable 3, Value: 7
+Clock: 2800, Process 1, Lookup: Variable 3, Value: 7
+Clock: 3110, Process 2, Lookup: Variable 2, Value: 3
+Clock: 3250, Process 1, Lookup: Variable 2, Value: 3
+Clock: 3540, Process 2, Release: Variable 1
+Clock: 3680, Process 1, Release: Variable 1
+Clock: 3950, Process 2, Store: Variable 1, Value: 8
+Clock: 4380, Process 2, Lookup: Variable 1, Value: 8
 
-Clock: 4000, Scheduler: Launching Process 3 (Start time: 4)
-Clock: 4000, Process 3: Started.
-Clock: 4000, Process 3, Store: Variable 1, Value: 5
-Clock: 4960, Process 1: Finished.
-Clock: 5110, Process 3, Store: Variable 3, Value: 7
-Clock: 5120, Process 3, Lookup: Variable 3, Value: 7
-Clock: 5810, Memory Manager, SWAP: Variable 2 with Variable 1
-Clock: 6000, Process 3, Release: Variable 1
-Clock: 6170, Process 3, Store: Variable 1, Value: 8
-Clock: 6260, Process 3, Lookup: Variable 1, Value: 8
-Clock: 7100, Process 3: Finished.
+Clock: 4380, Scheduler: Launching Process 3 (Start time: 4)
+Clock: 4380, Process 2: Finished.
+Clock: 4510, Process 1, Lookup: Variable 1, Value: 8
+Clock: 4510, Process 1: Finished.
+Clock: 4750, Process 3: Finished.

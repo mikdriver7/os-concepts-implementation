@@ -5,8 +5,10 @@
 #include "DiskManager.h"
 #include "Logger.h"
 #include "Clock.h"
+
 #include <string>
 #include <mutex>
+#include <unordered_set>
 
 class VirtualMemoryManager {
 private:

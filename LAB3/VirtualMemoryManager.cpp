@@ -6,8 +6,48 @@ VirtualMemoryManager::VirtualMemoryManager(MainMemory& mem, DiskManager& dsk, Cl
 
 }
 
+// // This instruction stores the given variable id and its value in the 
+// //first unassigned spot in the memory. 
+// void VirtualMemoryManager::store(const std::string& variableId, unsigned int value, int processId) {
+//     std::lock_guard<std::mutex> lock(vmmMutex); // Mutex lock to ensure thread-safety
+    
+//     int time = clock.getTime(); // Get the current time
+
+//     // Debug message to terminal
+//     std::cout << "Process " << processId << " attempting to store Variable " << variableId << std::endl;
+
+//     // Check if the variable is already in memory
+//     if (memory.hasVariable(variableId)) {
+//         // If the variable is already in memory, skip storing it
+//         std::cout << "Variable " << variableId << " already in memory, skipping store." << std::endl;
+
+//         // Log the operation
+//         std::ostringstream oss;
+//         // oss << "Clock: " << time << ", Process " << processId << ", Store: Variable " << variableId << ", Value: " << value << " (Already in memory)";
+//         // logger.log(oss.str());
+
+//         return;
+//     }
+
+//     // Try to store the variable in memory
+//         if (!memory.storeVariable(variableId, value, time)) {
+//         // If storing in memory fails, write to disk
+//         disk.writeVariable(variableId, value);
+
+//         // Log the operation
+//         std::ostringstream oss;
+//         oss << "Clock: " << time << ", Process " << processId << ", Store: Variable " << variableId << ", Value: " << value << " (Stored on disk)";
+//         logger.log(oss.str());
+//     } else {
+//         // Successfully stored in memory
+//         std::ostringstream oss;
+//         oss << "Clock: " << time << ", Process " << processId << ", Store: Variable " << variableId << ", Value: " << value;
+//         logger.log(oss.str());
+//     }
+// }
+
 // This instruction stores the given variable id and its value in the 
-//first unassigned spot in the memory. 
+// first unassigned spot in the memory.
 void VirtualMemoryManager::store(const std::string& variableId, unsigned int value, int processId) {
     std::lock_guard<std::mutex> lock(vmmMutex); // Mutex lock to ensure thread-safety
     
@@ -21,16 +61,12 @@ void VirtualMemoryManager::store(const std::string& variableId, unsigned int val
         // If the variable is already in memory, skip storing it
         std::cout << "Variable " << variableId << " already in memory, skipping store." << std::endl;
 
-        // Log the operation
-        std::ostringstream oss;
-        // oss << "Clock: " << time << ", Process " << processId << ", Store: Variable " << variableId << ", Value: " << value << " (Already in memory)";
-        // logger.log(oss.str());
-
+        // No logging here, as per the request
         return;
     }
 
     // Try to store the variable in memory
-        if (!memory.storeVariable(variableId, value, time)) {
+    if (!memory.storeVariable(variableId, value, time)) {
         // If storing in memory fails, write to disk
         disk.writeVariable(variableId, value);
 
@@ -45,6 +81,7 @@ void VirtualMemoryManager::store(const std::string& variableId, unsigned int val
         logger.log(oss.str());
     }
 }
+
 
 //This instruction removes the variable id and its value from the memory so the 
 // page which was holding this variable becomes available for further storage.

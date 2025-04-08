@@ -13,6 +13,8 @@ std::thread Process::spawn() {
 void Process::run() {
     running = true;
     
+    int commandIndex = 0; // Local commandIndex for each process
+
     // Wait until the clock reaches the start time
     // while (clock.getTime() < startTime) {
     //     std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Check the clock every 100ms
@@ -29,27 +31,36 @@ void Process::run() {
     std::uniform_int_distribution<> delay(1, 1000); // Random delay for simulating varied process timing
 
     while (running) {
-        auto elapsed = std::chrono::steady_clock::now() - startClock;
-        if (std::chrono::duration_cast<std::chrono::seconds>(elapsed).count() >= duration) break;  // Stop if process duration has passed
+        for (auto& cmd : commands) {
+            if (!cmd.isExecuted()) {  // Only execute commands that have not been executed
+                // Execute the command
 
-        const Command& cmd = commands[commandIndex]; // Get the next command
-        commandIndex = (commandIndex + 1) % commands.size(); // Move to the next command (wrap around if necessary)
+                switch (cmd.type) {
+                case STORE:
+                    vmm.store(cmd.variableId, cmd.value, processId); // Execute STORE command
+                    break;
+                case RELEASE:
+                    vmm.release(cmd.variableId, processId); // Execute RELEASE command
+                    break;
+                case LOOKUP:
+                    vmm.lookup(cmd.variableId, processId); // Execute LOOKUP command
+                    break;
+                default:
+                    break;
+                }
+                
+                cmd.markExecuted();  // Mark command as executed
+                break; // Stop the loop, since one command should be executed at a time
+            }
+    }
 
-        switch (cmd.type) {
-        case STORE:
-            vmm.store(cmd.variableId, cmd.value, processId); // Execute STORE command
-            break;
-        case RELEASE:
-            vmm.release(cmd.variableId, processId); // Execute RELEASE command
-            break;
-        case LOOKUP:
-            vmm.lookup(cmd.variableId, processId); // Execute LOOKUP command
-            break;
-        default:
-            break;
-        }
+        // Check if all commands have been executed
+        bool allExecuted = std::all_of(commands.begin(), commands.end(), [](Command& cmd) {
+            return cmd.isExecuted();
+        });
+        if (allExecuted) break;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(delay(gen)));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Sleep to simulate execution time
     }
 
     int timeEnd = clock.getTime();
