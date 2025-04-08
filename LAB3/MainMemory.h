@@ -5,11 +5,12 @@
 #include <vector>
 #include <string>
 #include <mutex>
+# include <iostream>
 
 class MainMemory {
 private:
     std::vector<Page> pages;
-    std::mutex memoryMutex;
+    std::recursive_mutex memoryMutex; // bug 1 fix
 
 public:
     MainMemory(int size);

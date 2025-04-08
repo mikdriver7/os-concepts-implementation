@@ -18,5 +18,6 @@ void Page::release() {
 }
 
 bool Page::isEmpty() const {
-    return !isOccupied;
+    return !isOccupied;  // Returns true if the page is not occupied
 }
+

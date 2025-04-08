@@ -10,8 +10,7 @@ private:
     std::atomic<int> currentTime;
     std::atomic<bool> running;
     std::thread clockThread;
-
-    
+    std::atomic<bool> initialized; 
 
 public:
     Clock();

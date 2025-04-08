@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-Clock::Clock() : currentTime(0), running(false) {}
+Clock::Clock() : currentTime(1000), running(false) {}
 
 void Clock::start() {
     running = true;
@@ -17,10 +17,16 @@ void Clock::stop() {
 
 void Clock::run() {
     std::cout << "current time:" << currentTime << endl;
+    int timeOffset = 1000 - currentTime.load(); 
+
     while (running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        ++currentTime;
+        currentTime += 10;
         
+        // Log the time at regular intervals
+        // if (currentTime % 10 == 0) {  // Adjust the condition to log every 10ms
+        //     std::cout << "Clock: " << currentTime << endl;
+        // }
     }
 }
 

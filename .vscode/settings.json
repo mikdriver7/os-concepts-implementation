@@ -32,6 +32,24 @@
         "sstream": "cpp",
         "variant": "cpp",
         "algorithm": "cpp",
-        "eventlogger.h": "c"
+        "eventlogger.h": "c",
+        "__hash_table": "cpp",
+        "__node_handle": "cpp",
+        "array": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "condition_variable": "cpp",
+        "cstdarg": "cpp",
+        "cstdio": "cpp",
+        "cwchar": "cpp",
+        "cwctype": "cpp",
+        "execution": "cpp",
+        "mutex": "cpp",
+        "optional": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "unordered_map": "cpp",
+        "fstream": "cpp",
+        "queue": "cpp"
     }
 }
