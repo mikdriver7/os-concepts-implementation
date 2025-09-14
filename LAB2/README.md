@@ -1,7 +1,7 @@
 # Lab 2: Fair-Share Process Scheduler
 
 ## Overview
-This project implements a fair-share process scheduler that manages multiple users and their processes with equal resource allocation. The scheduler uses a round-robin algorithm with configurable time quantum to ensure fair CPU time distribution among users.
+This project implements a fair-share process scheduler that manages multiple users and their processes with equal resource allocation. The scheduler uses a round-robin algorithm with a configurable time quantum to ensure fair CPU time distribution among users.
 
 ## Algorithm Description
 The fair-share scheduler operates on the following principles:
