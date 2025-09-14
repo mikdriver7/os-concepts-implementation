@@ -79,7 +79,6 @@ COEN346/
 │   ├── Logger.cpp/h        # Logging system
 │   ├── Command.cpp/h       # Command processing
 │   └── README.md           # Detailed documentation
-├── Makefile                # Build configuration
 ├── .gitignore             # Git ignore rules
 └── README.md              # This file
 ```
