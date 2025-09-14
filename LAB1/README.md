@@ -1,7 +1,7 @@
 # Lab 1: Multithreaded Merge Sort
 
 ## Overview
-This project implements a parallel version of the merge sort algorithm using C++ threads. The program demonstrates multithreading concepts, thread synchronization, and divide-and-conquer parallelization techniques.
+This project implements a parallel version of the merge sort algorithm using C++ threads. The program demonstrates concepts of multithreading, thread synchronization, and divide-and-conquer parallelization techniques.
 
 ## Algorithm Description
 The multithreaded merge sort works by:
