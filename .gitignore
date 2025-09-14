@@ -1,0 +1,74 @@
+# Compiled Object files
+*.o
+*.obj
+
+# Executable files
+*.exe
+*.out
+*.app
+scheduler
+Assignment1
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build directories
+build/
+dist/
+bin/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Output files (keep input files for examples)
+output.txt
+
+# Backup files
+*.bak
+*.backup
