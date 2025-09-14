@@ -2,7 +2,7 @@
 
 This repository contains three comprehensive operating systems projects developed as part of COEN346 (Operating Systems Laboratory) coursework. Each project demonstrates different aspects of operating system concepts including multithreading, process scheduling, and memory management.
 
-## 🚀 Projects Overview
+## Projects Overview
 
 ### [Lab 1: Multithreaded Merge Sort](./LAB1/)
 **Concepts:** Multithreading, Thread Synchronization, Divide-and-Conquer Algorithms
