@@ -2,7 +2,7 @@
 
 
 Scheduler::Scheduler(int cores, Logger& logger, Clock& clock, VirtualMemoryManager& vmm)
-    : vmm(vmm), maxCores(cores), logger(logger), clock(clock), activeCores(0), done(false) {}
+    : vmm(vmm), maxCores(cores), logger(logger), clock(clock), activeCores(0) {}
 
 
 void Scheduler::addProcess(Process* process) {
@@ -14,7 +14,7 @@ void Scheduler::addProcess(Process* process) {
 
 void Scheduler::run() {
     // Loop until all processes have been processed or we stop manually
-    while (!done && (!processQueue.empty() || activeCores.load() > 0)) {
+    while (!done || !processQueue.empty()) {
         // Lock the mutex to ensure thread safety when accessing the queue
         std::unique_lock<std::mutex> lock(queueMutex);
 

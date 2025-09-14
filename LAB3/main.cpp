@@ -93,9 +93,14 @@ int main() {
     std::thread schedulerThread(&Scheduler::run, &scheduler);
 
     schedulerThread.join();
+    std::cout << "S\n";
+
     scheduler.stop();
-    clock.stop();
+
+    std::cout << "S\n";
+
     clockThread.join();
+    clock.stop();
 
     std::cout << "Simulation completed. Output written to output.txt\n";
     return 0;
