@@ -52,7 +52,7 @@ void Process::run() {
                 cmd.markExecuted();  // Mark command as executed
                 break; // Stop the loop, since one command should be executed at a time
             }
-    }
+        }
 
         // Check if all commands have been executed
         bool allExecuted = std::all_of(commands.begin(), commands.end(), [](Command& cmd) {
