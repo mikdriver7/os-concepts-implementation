@@ -102,6 +102,7 @@ These projects demonstrate proficiency in:
 
 ## Authors
 Mik Driver (40244456)
+
 Victor Depaz (40242703)
 
 ---
