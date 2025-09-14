@@ -27,7 +27,7 @@ This project implements a comprehensive virtual memory management system with in
 - Multi-core process scheduling
 - Process state management
 - Command execution and monitoring
-- Integration with virtual memory system
+- Integration with the virtual memory system
 
 #### System Clock
 - Global time management
